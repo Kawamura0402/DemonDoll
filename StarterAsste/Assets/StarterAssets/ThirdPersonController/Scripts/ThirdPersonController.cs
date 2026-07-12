@@ -83,6 +83,8 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        public bool MovementLocked { get; private set; }
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -118,6 +120,32 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
+
+        public bool IsCrouching { get; private set; }
+
+        public void SetMovementLocked(bool locked)
+        {
+            MovementLocked = locked;
+
+            if (locked)
+            {
+                _speed = 0f;
+                _animationBlend = 0f;
+
+                if (_input != null)
+                {
+                    _input.move = Vector2.zero;
+                    _input.sprint = false;
+                    _input.jump = false;
+                }
+
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, 0f);
+                    _animator.SetFloat(_animIDMotionSpeed, 0f);
+                }
+            }
+        }
 
         private bool IsCurrentDeviceMouse
         {
@@ -223,8 +251,25 @@ namespace StarterAssets
 
         private void Move()
         {
+            if (MovementLocked)
+            {
+                // 攻撃中も重力だけは適用する
+                _controller.Move(
+                    new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime
+                );
+
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, 0f);
+                    _animator.SetFloat(_animIDMotionSpeed, 0f);
+                }
+
+                return;
+            }
+
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            bool isCrouching = Input.GetKey(crouchKey) && Grounded;
+            IsCrouching = Input.GetKey(crouchKey) && Grounded;
+            bool isCrouching = IsCrouching;
 
             float targetSpeed;
 

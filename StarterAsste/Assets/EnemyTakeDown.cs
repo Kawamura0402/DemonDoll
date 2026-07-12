@@ -1,7 +1,12 @@
+using StarterAssets;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyTakeDown : MonoBehaviour
 {
+    [Header("TakeDown Timing")]
+    public float playerMovementLockTime = 1.1f;
+
     [Header("Player")]
     public Transform player;
 
@@ -19,19 +24,63 @@ public class EnemyTakeDown : MonoBehaviour
 
     public KeyCode takeDownKey = KeyCode.E;
 
+    private bool isTakeDowned = false;
+    private bool hasReportedDefeated = false;
+
+    private static bool anyTakeDownInProgress = false;
+
+    bool IsAnyEnemyChasing()
+    {
+        EnemyChase[] enemies =
+            Object.FindObjectsByType<EnemyChase>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (EnemyChase enemy in enemies)
+        {
+            if (enemy != null && enemy.isChasing)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void Awake()
+    {
+        if (enemyAnimator == null)
+        {
+            enemyAnimator = GetComponent<Animator>();
+        }
+    }
 
     void Update()
     {
+        if (anyTakeDownInProgress)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(takeDownKey))
         {
             TryTakeDown();
         }
     }
 
-    private bool isTakeDowned = false;
-
     void TryTakeDown()
     {
+        if (anyTakeDownInProgress)
+        {
+            return;
+        }
+
+        if (IsAnyEnemyChasing())
+        {
+            Debug.Log("いずれかのNPCに発見中のためTakeDownできません");
+            return;
+        }
+
         if (isTakeDowned)
         {
             return;
@@ -42,6 +91,12 @@ public class EnemyTakeDown : MonoBehaviour
         if (chase != null && chase.isChasing)
         {
             Debug.Log("追跡中はテイクダウンできない");
+            return;
+        }
+
+        if (player == null)
+        {
+            Debug.LogWarning("Playerが設定されていません");
             return;
         }
 
@@ -63,7 +118,31 @@ public class EnemyTakeDown : MonoBehaviour
 
         Debug.Log("テイクダウン成功");
 
+        // 全NPC共通で「テイクダウン中」にする
+        anyTakeDownInProgress = true;
+
+        // このNPCを撃破済みにする
         isTakeDowned = true;
+
+        // プレイヤーの移動を停止する
+        StartCoroutine(LockPlayerMovement());
+
+        // GameManagerへ撃破報告
+        if (!hasReportedDefeated)
+        {
+            hasReportedDefeated = true;
+
+            GameManager gameManager = FindFirstObjectByType<GameManager>();
+
+            if (gameManager != null)
+            {
+                gameManager.EnemyDefeated();
+            }
+            else
+            {
+                Debug.LogWarning("GameManagerが見つかりません");
+            }
+        }
 
         // プレイヤーアニメ
         if (playerAnimator != null)
@@ -99,6 +178,16 @@ public class EnemyTakeDown : MonoBehaviour
         if (agent != null)
         {
             agent.isStopped = true;
+            agent.ResetPath();
+            agent.enabled = false;
+        }
+
+        // Collider停止
+        CapsuleCollider capsule = GetComponent<CapsuleCollider>();
+
+        if (capsule != null)
+        {
+            capsule.enabled = false;
         }
 
         // 死亡アニメ
@@ -116,11 +205,26 @@ public class EnemyTakeDown : MonoBehaviour
         Destroy(gameObject, 3f);
     }
 
-    void Awake()
+    IEnumerator LockPlayerMovement()
     {
-        if (enemyAnimator == null)
+        ThirdPersonController controller =
+            player.GetComponent<ThirdPersonController>();
+
+        if (controller == null)
         {
-            enemyAnimator = GetComponent<Animator>();
+            anyTakeDownInProgress = false;
+            yield break;
         }
+
+        controller.SetMovementLocked(true);
+
+        yield return new WaitForSeconds(playerMovementLockTime);
+
+        if (controller != null)
+        {
+            controller.SetMovementLocked(false);
+        }
+
+        anyTakeDownInProgress = false;
     }
 }

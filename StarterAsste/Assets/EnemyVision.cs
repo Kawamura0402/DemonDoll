@@ -1,4 +1,5 @@
 using UnityEngine;
+using StarterAssets;
 
 public class EnemyVision : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class EnemyVision : MonoBehaviour
     public float currentAngle = 60f;
 
     // ダメージ量
-    public int damage = 10;
+    public int damage = 100;
 
     // ダメージ間隔
-    public float damageInterval = 1f;
+    public float damageInterval = 1.5f;
 
     // プレイヤー
     public Transform player;
@@ -21,14 +22,37 @@ public class EnemyVision : MonoBehaviour
 
     private EnemyChase chaseAI;
 
+    private ThirdPersonController playerController;
+
+    [Header("Crouch Detection")]
+    [Range(0.1f, 1f)]
+    public float crouchViewDistanceMultiplier = 0.55f;
+
     void Start()
     {
         chaseAI = GetComponent<EnemyChase>();
+
+        if (player != null)
+        {
+            playerController = player.GetComponent<ThirdPersonController>();
+        }
     }
 
     void Update()
     {
         if (player == null)
+        {
+            return;
+        }
+
+        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+
+        if (playerHealth == null)
+        {
+            return;
+        }
+
+        if (playerHealth.isDead)
         {
             return;
         }
@@ -41,7 +65,7 @@ public class EnemyVision : MonoBehaviour
             {
                 Debug.Log("プレイヤー発見");
 
-                player.GetComponent<PlayerHealth>() .TakeDamage(damage);
+                playerHealth.TakeDamage(damage);
 
                 timer = 0f;
             }
@@ -71,12 +95,27 @@ public class EnemyVision : MonoBehaviour
         // 距離
         float distance = Vector3.Distance(eyePosition, playerPosition);
 
+        float effectiveDistance = currentDistance;
+
+        if (chaseAI != null)
+        {
+            effectiveDistance = chaseAI.currentViewDistance;
+        }
+
+        if (chaseAI != null &&
+            !chaseAI.isChasing &&
+            playerController != null &&
+            playerController.IsCrouching)
+        {
+            effectiveDistance *= crouchViewDistanceMultiplier;
+        }
+
         // 距離チェック
-        if (distance > currentDistance)
+        if (distance > effectiveDistance)
         {
             return false;
         }
-           
+
 
         // 角度チェック
         float angle = Vector3.Angle(transform.forward, directionToPlayer);
@@ -90,7 +129,7 @@ public class EnemyVision : MonoBehaviour
         // Raycast
         RaycastHit hit;
 
-        if (Physics.Raycast(eyePosition, directionToPlayer, out hit, currentDistance))
+        if (Physics.Raycast(eyePosition, directionToPlayer, out hit, effectiveDistance))
         {
 
             if (hit.transform.CompareTag("Player"))
