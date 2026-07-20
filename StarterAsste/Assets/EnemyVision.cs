@@ -24,12 +24,16 @@ public class EnemyVision : MonoBehaviour
 
     private ThirdPersonController playerController;
 
+    private GameManager gameManager;
+
     [Header("Crouch Detection")]
     [Range(0.1f, 1f)]
     public float crouchViewDistanceMultiplier = 0.55f;
 
     void Start()
     {
+        gameManager = FindFirstObjectByType<GameManager>();
+
         chaseAI = GetComponent<EnemyChase>();
 
         if (player != null)
@@ -40,6 +44,12 @@ public class EnemyVision : MonoBehaviour
 
     void Update()
     {
+        if (gameManager != null && !gameManager.IsPlaying)
+        {
+            timer = 0f;
+            return;
+        }
+
         if (player == null)
         {
             return;

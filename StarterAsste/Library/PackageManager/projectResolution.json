@@ -39,13 +39,13 @@
       "source": "registry",
       "testable": false
     },
-    "com.unity.ai.navigation@2.0.12": {
+    "com.unity.ai.navigation@2.0.14": {
       "name": "com.unity.ai.navigation",
       "displayName": "AI Navigation",
-      "resolvedPath": "D:\\DemonDoll\\StarterAsste\\Library\\PackageCache\\com.unity.ai.navigation@734c2c4c5591",
-      "fingerprint": "734c2c4c5591c25b6d4c6c83bd2f4957c118da40",
+      "resolvedPath": "D:\\DemonDoll\\StarterAsste\\Library\\PackageCache\\com.unity.ai.navigation@134dd6a3b97b",
+      "fingerprint": "134dd6a3b97bb75be809e267fbcd9c5071579dd2",
       "editorCompatibility": "6000.0.0a1",
-      "version": "2.0.12",
+      "version": "2.0.14",
       "source": "registry",
       "testable": false
     },

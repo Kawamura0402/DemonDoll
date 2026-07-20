@@ -29,6 +29,8 @@ public class EnemyTakeDown : MonoBehaviour
 
     private static bool anyTakeDownInProgress = false;
 
+    private GameManager gameManager;
+
     bool IsAnyEnemyChasing()
     {
         EnemyChase[] enemies =
@@ -49,6 +51,8 @@ public class EnemyTakeDown : MonoBehaviour
 
     void Awake()
     {
+        gameManager = FindFirstObjectByType<GameManager>();
+
         if (enemyAnimator == null)
         {
             enemyAnimator = GetComponent<Animator>();
@@ -57,6 +61,11 @@ public class EnemyTakeDown : MonoBehaviour
 
     void Update()
     {
+        if (gameManager != null && !gameManager.IsPlaying)
+        {
+            return;
+        }
+
         if (anyTakeDownInProgress)
         {
             return;

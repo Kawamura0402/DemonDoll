@@ -468,7 +468,6 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.0.76f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.0.76f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
 "Assets/EnemyChase.cs"
-"Assets/EnemyChaseAI.cs"
 "Assets/EnemyTakeDown.cs"
 "Assets/EnemyTouchDetection.cs"
 "Assets/EnemyVision.cs"

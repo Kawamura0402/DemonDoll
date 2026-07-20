@@ -73,10 +73,14 @@ public class EnemyChase : MonoBehaviour
     [HideInInspector]
     public float currentViewAngle;
 
+    private GameManager gameManager;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+        gameManager = FindFirstObjectByType<GameManager>();
 
         agent.speed = patrolSpeed;
 
@@ -150,7 +154,11 @@ public class EnemyChase : MonoBehaviour
         }
 
         // プレイヤーを見つけたか確認
-        CheckPlayer();
+        // ゲーム開始後だけプレイヤーを発見する
+        if (gameManager == null || gameManager.IsPlaying)
+        {
+            CheckPlayer();
+        }
 
         if (isChasing)
         {

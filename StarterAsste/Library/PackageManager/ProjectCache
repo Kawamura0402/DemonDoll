@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639146827796088861
-    m_Hash: 3776432734
+      ticks: 639200748876359748
+    m_Hash: 3132280236
   m_LockFileStatus:
     m_FilePath: D:/DemonDoll/StarterAsste/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 639156443881845830
-    m_Hash: 4221149952
+      ticks: 639200748877964093
+    m_Hash: 1861587966
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -348,12 +348,12 @@ m_ResolvedPackages:
       scopePatternExpression: 
       message: 
       readMoreLink: 
-- packageId: com.unity.ai.navigation@2.0.12
+- packageId: com.unity.ai.navigation@2.0.14
   testable: 0
   isDirectDependency: 1
-  version: 2.0.12
+  version: 2.0.14
   source: 1
-  resolvedPath: D:\DemonDoll\StarterAsste\Library\PackageCache\com.unity.ai.navigation@734c2c4c5591
+  resolvedPath: D:\DemonDoll\StarterAsste\Library\PackageCache\com.unity.ai.navigation@134dd6a3b97b
   assetPath: Packages/com.unity.ai.navigation
   name: com.unity.ai.navigation
   displayName: AI Navigation
@@ -396,10 +396,12 @@ m_ResolvedPackages:
     - 2.0.11
     - 2.0.12
     - 2.0.13
+    - 2.0.14
     compatible:
     - 2.0.12
     - 2.0.13
-    recommended: 2.0.13
+    - 2.0.14
+    recommended: 2.0.14
     deprecated: []
   dependencies:
   - name: com.unity.modules.ai
@@ -441,13 +443,13 @@ m_ResolvedPackages:
   entitlements:
     licensingModel: 1
   isAssetStorePackage: 0
-  datePublishedTicks: 639094401028640000
+  datePublishedTicks: 639196286252750000
   documentationUrl: https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git
-    revision: 242ca4c9e872acfa139a1f7497abc44987f0f4b3
+    revision: 4ee1d652d94787ec330eb1706d9f63e885c9427f
     path: 
   unityLifecycle:
     version: 2.0.12
@@ -460,11 +462,17 @@ m_ResolvedPackages:
   git:
     hash: 
     revision: 
-  upmReserved: '{"changelog":"### Fixed\n* Fixed exception being thrown on Linux
-    when opening the settings windows."}'
+  upmReserved: '{"changelog":"### Changed\n* The samples now use the Input System
+    package (`com.unity.inputsystem`) for player input instead of the legacy Input
+    Manager.\n\n### Fixed\n* The **AI Navigation** preferences were not searchable
+    from the Preferences window search field.\n* Errors from NavigationOverlay logged
+    to the console when the NavMeshAgent was selected at the start of playmode.\n*
+    Fixed the options in the **AI Navigation** overlay overlapping each other when
+    the overlay was squished. The options panel is now wrapped in a scroll view.
+    ([UUM-133539](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-133539))"}'
   assetStore:
     productId: 
-  fingerprint: 734c2c4c5591c25b6d4c6c83bd2f4957c118da40
+  fingerprint: 134dd6a3b97bb75be809e267fbcd9c5071579dd2
   editorCompatibility:
     compatibilityLevel: 0
     minimumPackageVersion: 2.0.12
@@ -946,8 +954,10 @@ m_ResolvedPackages:
     - 2.11.3
     - 2.11.4
     - 2.12.4
+    - 2.13.3
     compatible:
     - 2.12.4
+    - 2.13.3
     recommended: 2.12.4
     deprecated: []
   dependencies: []
@@ -6686,10 +6696,12 @@ m_ResolvedPackages:
     - 2.6.5
     - 2.6.6
     - 2.6.7
+    - 2.6.8
     compatible:
     - 2.6.6
     - 2.6.7
-    recommended: 2.6.7
+    - 2.6.8
+    recommended: 2.6.8
     deprecated: []
   dependencies:
   - name: com.unity.burst

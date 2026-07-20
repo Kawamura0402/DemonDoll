@@ -1,8 +1,19 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using StarterAssets;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Game Start Settings")]
+    public float preparationTime = 5f;
+    public float startTextDisplayTime = 1.5f;
+    public GameObject startText;
+
+    public bool IsPlaying { get; private set; } = false;
+
+    private ThirdPersonController playerController;
+
     public GameObject gameOverText;
     public GameObject gameClearText;
 
@@ -17,6 +28,57 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         CountEnemiesInScene();
+
+        playerController = FindFirstObjectByType<ThirdPersonController>();
+
+        StartCoroutine(BeginGameSequence());
+    }
+
+    IEnumerator BeginGameSequence()
+    {
+        // 準備状態
+        IsPlaying = false;
+
+        // プレイヤーを停止
+        if (playerController != null)
+        {
+            playerController.SetMovementLocked(true);
+        }
+        else
+        {
+            Debug.LogWarning("ThirdPersonControllerが見つかりません");
+        }
+
+        // 最初はSTARTを非表示
+        if (startText != null)
+        {
+            startText.SetActive(false);
+        }
+
+        Debug.Log("NPC先行時間開始");
+
+        // NPCだけを先に動かす
+        yield return new WaitForSeconds(preparationTime);
+
+        // ゲーム開始
+        IsPlaying = true;
+
+        if (playerController != null)
+        {
+            playerController.SetMovementLocked(false);
+        }
+
+        Debug.Log("ゲームスタート");
+
+        // START表示
+        if (startText != null)
+        {
+            startText.SetActive(true);
+
+            yield return new WaitForSeconds(startTextDisplayTime);
+
+            startText.SetActive(false);
+        }
     }
 
     void CountEnemiesInScene()
