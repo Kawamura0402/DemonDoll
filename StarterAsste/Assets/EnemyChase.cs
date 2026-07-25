@@ -75,6 +75,9 @@ public class EnemyChase : MonoBehaviour
 
     private GameManager gameManager;
 
+    private Vector3 lastSeenPosition;
+    private bool hasLastSeenPosition;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
